@@ -70,6 +70,20 @@ new_html = new_html.replace("https://maestraauroradelamor.online/wp-content/uplo
 new_html = re.sub(r'srcset="[^"]*logo-aur[^"]*"', '', new_html)
 new_html = re.sub(r'srcset="[^"]*logo-4[^"]*"', '', new_html)
 
+# Inject Google Tag (gtag.js) for Google Ads tracking (AW-18117498384)
+    gtag_script = '''<!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18117498384"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-18117498384');
+    </script>'''
+    # Insert after <head> tag
+    if '<head>' in new_html:
+        new_html = new_html.replace('<head>', '<head>\n    ' + gtag_script, 1)
+    else:
+        print('Warning: <head> tag not found in HTML')
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(new_html)
 
