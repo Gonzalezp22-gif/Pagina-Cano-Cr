@@ -41,18 +41,18 @@ replacements = {
 for old, new in replacements.items():
     new_html = new_html.replace(old, new)
     
+# Also replace direct wa.me links (do this BEFORE specific string replacements to avoid doubling)
+new_html = re.sub(r'https://api\.whatsapp\.com/send\?phone=\d+', 'https://api.whatsapp.com/send?phone=525661452038&text=Deseo%20una%20Consulta%20Inmediata', new_html)
+new_html = re.sub(r'https://wa\.me/\+?\d+', 'https://wa.me/525661452038?text=Deseo%20una%20Consulta%20Inmediata', new_html)
+
 # Replace specific URLs for phone numbers
-new_html = new_html.replace("https://maestraauroradelamor.online/conversiones-whatsapp.html", "https://wa.me/525661452038?text=Deseo%20una%20Consulta%20Inmediata")
-new_html = new_html.replace("https://maestraauroradelamor.online/conversiones-llamada.html", "tel:525661452038")
+new_html = new_html.replace("https://maestroauroradelamor.online/conversiones-whatsapp.html", "https://wa.me/525661452038?text=Deseo%20una%20Consulta%20Inmediata")
+new_html = new_html.replace("https://maestroauroradelamor.online/conversiones-llamada.html", "tel:525661452038")
 
 # Replace any found phone numbers
 new_html = new_html.replace("11305122142", "525661452038")
 new_html = new_html.replace("5215546865327", "525661452038")
 new_html = new_html.replace("5546865327", "525661452038")
-
-# Also replace direct wa.me links
-new_html = re.sub(r'https://api\.whatsapp\.com/send\?phone=\d+', 'https://api.whatsapp.com/send?phone=525661452038&text=Deseo%20una%20Consulta%20Inmediata', new_html)
-new_html = re.sub(r'https://wa\.me/\+?\d+', 'https://wa.me/525661452038?text=Deseo%20una%20Consulta%20Inmediata', new_html)
 
 # Since we replaced 'maestra' to 'maestro', the base URL of assets might have broken
 # Let's fix the asset URLs back to the true domain
