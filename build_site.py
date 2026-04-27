@@ -71,7 +71,7 @@ new_html = re.sub(r'srcset="[^"]*logo-aur[^"]*"', '', new_html)
 new_html = re.sub(r'srcset="[^"]*logo-4[^"]*"', '', new_html)
 
 # Inject Google Tag (gtag.js) for Google Ads tracking (AW-18117498384)
-    gtag_script = '''<!-- Google tag (gtag.js) -->
+gtag_script = '''<!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18117498384"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -79,11 +79,16 @@ new_html = re.sub(r'srcset="[^"]*logo-4[^"]*"', '', new_html)
       gtag('js', new Date());
       gtag('config', 'AW-18117498384');
     </script>'''
-    # Insert after <head> tag
-    if '<head>' in new_html:
-        new_html = new_html.replace('<head>', '<head>\n    ' + gtag_script, 1)
-    else:
-        print('Warning: <head> tag not found in HTML')
+
+# Inject Vercel Web Analytics
+vercel_analytics_script = '''<!-- Vercel Web Analytics -->
+    <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>'''
+
+# Insert after <head> tag
+if '<head>' in new_html:
+    new_html = new_html.replace('<head>', '<head>\n    ' + gtag_script + '\n    ' + vercel_analytics_script, 1)
+else:
+    print('Warning: <head> tag not found in HTML')
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(new_html)
 
