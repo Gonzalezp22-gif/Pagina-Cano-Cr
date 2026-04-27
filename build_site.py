@@ -42,17 +42,17 @@ for old, new in replacements.items():
     new_html = new_html.replace(old, new)
     
 # Replace specific URLs for phone numbers
-new_html = new_html.replace("https://maestroauroradelamor.online/conversiones-whatsapp.html", "https://wa.me/5539580291")
-new_html = new_html.replace("https://maestroauroradelamor.online/conversiones-llamada.html", "tel:5539580291")
+new_html = new_html.replace("https://maestraauroradelamor.online/conversiones-whatsapp.html", "https://wa.me/525661452038?text=Deseo%20una%20Consulta%20Inmediata")
+new_html = new_html.replace("https://maestraauroradelamor.online/conversiones-llamada.html", "tel:525661452038")
 
 # Replace any found phone numbers
-new_html = new_html.replace("11305122142", "5539580291")
-new_html = new_html.replace("5215546865327", "525539580291")
-new_html = new_html.replace("5546865327", "5539580291")
+new_html = new_html.replace("11305122142", "525661452038")
+new_html = new_html.replace("5215546865327", "525661452038")
+new_html = new_html.replace("5546865327", "525661452038")
 
 # Also replace direct wa.me links
-new_html = re.sub(r'https://api\.whatsapp\.com/send\?phone=\d+', 'https://api.whatsapp.com/send?phone=525539580291', new_html)
-new_html = re.sub(r'https://wa\.me/\+?\d+', 'https://wa.me/525539580291', new_html)
+new_html = re.sub(r'https://api\.whatsapp\.com/send\?phone=\d+', 'https://api.whatsapp.com/send?phone=525661452038&text=Deseo%20una%20Consulta%20Inmediata', new_html)
+new_html = re.sub(r'https://wa\.me/\+?\d+', 'https://wa.me/525661452038?text=Deseo%20una%20Consulta%20Inmediata', new_html)
 
 # Since we replaced 'maestra' to 'maestro', the base URL of assets might have broken
 # Let's fix the asset URLs back to the true domain
@@ -71,19 +71,28 @@ new_html = re.sub(r'srcset="[^"]*logo-aur[^"]*"', '', new_html)
 new_html = re.sub(r'srcset="[^"]*logo-4[^"]*"', '', new_html)
 
 # Inject Google Tag (gtag.js) for Google Ads tracking (AW-18117498384)
-    gtag_script = '''<!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18117498384"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'AW-18117498384');
-    </script>'''
-    # Insert after <head> tag
-    if '<head>' in new_html:
-        new_html = new_html.replace('<head>', '<head>\n    ' + gtag_script, 1)
-    else:
-        print('Warning: <head> tag not found in HTML')
+gtag_script = '''<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18117498384"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18117498384');
+</script>'''
+# Insert after <head> tag
+if '<head>' in new_html:
+    new_html = new_html.replace('<head>', '<head>\n    ' + gtag_script, 1)
+else:
+    print('Warning: <head> tag not found in HTML')
+
+vercel_script = """
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+"""
+new_html = new_html.replace("</head>", vercel_script)
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(new_html)
 
